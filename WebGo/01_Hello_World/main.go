@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 )
@@ -33,11 +34,35 @@ func addValues(x, y int) int {
 	return sum
 }
 
+// DividePage is a simple HTTP handler function that writes a response to the client
+func DividePage(w http.ResponseWriter, r *http.Request) {
+	f, err := divideValues(100.0, 0.0)
+
+	if err != nil {
+		fmt.Fprint(w, err.Error())
+		return
+	}
+
+	fmt.Fprintf(w, "%f divided by %f is %f", 100.0, 0.0, f)
+}
+
+// divideValues is a simple function that divides two float32 values and returns the result
+func divideValues(x, y float32) (float32, error) {
+
+	if y <= 0 {
+		err := errors.New("can not divide by zero")
+		return 0, err
+	}
+	result := x / y
+	return result, nil
+}
+
 // main is the entry point for the application
 func main() {
 	http.HandleFunc("/", HelloWorld)
 	http.HandleFunc("/home", HomePage)
 	http.HandleFunc("/about", AboutPage)
+	http.HandleFunc("/divide", DividePage)
 
 	fmt.Printf("Starting application on port %s\n", portNumber)
 	_ = http.ListenAndServe(portNumber, nil)
