@@ -5,6 +5,8 @@ import (
 	"net/http"
 )
 
+const portNumber = ":8080"
+
 // HelloWorld is a simple HTTP handler function that writes a response to the client
 func HelloWorld(w http.ResponseWriter, r *http.Request) {
 	n, err := fmt.Fprintf(w, "Hello World")
@@ -37,5 +39,6 @@ func main() {
 	http.HandleFunc("/home", HomePage)
 	http.HandleFunc("/about", AboutPage)
 
-	_ = http.ListenAndServe(":8080", nil)
+	fmt.Printf("Starting application on port %s\n", portNumber)
+	_ = http.ListenAndServe(portNumber, nil)
 }
